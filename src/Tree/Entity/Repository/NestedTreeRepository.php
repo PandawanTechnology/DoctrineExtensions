@@ -161,6 +161,11 @@ class NestedTreeRepository extends AbstractTreeRepository
         ;
         if (isset($config['root'])) {
             $rootId = $wrapped->getPropertyValue($config['root']);
+
+            if (\is_a($node, $meta->getName())) {
+                $rootId = (new EntityWrapper($rootId, $this->_em))->getIdentifier();
+            }
+
             $idType = $meta->getTypeOfField($meta->getSingleIdentifierFieldName());
             $qb->andWhere($qb->expr()->eq('node.'.$config['root'], ':rid'));
             $qb->setParameter('rid', $rootId, $idType);
